@@ -6,4 +6,21 @@
  */
 public class Album extends MusicEntry {
 
+	private int year;
+	private Artist artist;
+	
+	public Album(String name, String id, int year, Artist artist){
+		super(name,id,100);
+		this.year = year;
+		this.artist = artist;
+	}
+	
+	public int getYear(){
+		return year;
+	}
+	
+	@Override
+	public String getDetails(){
+		return "Title: "+super.getName()+ ", ID: "+super.getID()+", Artist: "+artist.getName()+", Year:"+year;
+	}
 }
