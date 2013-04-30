@@ -12,6 +12,6 @@ public class Driver {
 		 col.populateArtistNames();
 		 col.searchForArtistDetails();
 		 col.populateAlbums();
-		 
+		
 	 }
 }

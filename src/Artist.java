@@ -10,7 +10,7 @@ public class Artist extends MusicEntry {
 
 	private String rawName;
 	private ArrayList<Album> releases;
-	private static InternetInterface network = new MusicBrainzInterface();
+	private static InternetInterface network = new DiscogsInterface();
 	
 	/**
 	 * Constructs a new Artist object
@@ -63,8 +63,14 @@ public class Artist extends MusicEntry {
 	}
 	
 	public ArrayList<Album> getAlbumsSince(int year){
-		//TODO implement this
-		return null;
+		ArrayList<Album> result = new ArrayList<Album>();
+		
+		for (Album alb : releases){
+			if (alb.getYear()>=year)
+				result.add(alb);
+		}
+		
+		return result;
 	}
 	
 	public boolean isFound(){

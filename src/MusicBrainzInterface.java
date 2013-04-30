@@ -23,26 +23,10 @@ import java.io.File;
  * So far it seems quite accurate but it is rate limited
  * to a single request per second.
  */
-public class MusicBrainzInterface implements InternetInterface{
-
-	private static final long RATE_LIMIT=1000;
-	private static long nextAllowedTime=0;
+public class MusicBrainzInterface extends InternetInterface{
 	
-	/**
-	 * Limits the rate of requests to the MusicBrainz web server
-	 */
-	private static void rateLimit(){
-		if(nextAllowedTime>System.currentTimeMillis()){
-			try {
-				Thread.sleep(nextAllowedTime-System.currentTimeMillis());
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		nextAllowedTime=System.currentTimeMillis()+RATE_LIMIT;
-	}
+	private static final long RATE_LIMIT= 1000;
+	private static long nextAllowedTime =0;
 	
 	/**
 	 * Querys the MusicBrainz web service for a particular artist
@@ -51,7 +35,7 @@ public class MusicBrainzInterface implements InternetInterface{
 	public Artist getArtist(String name) throws NoSuchArtistException{
 		try {
 			
-			rateLimit();
+			nextAllowedTime = rateLimit(RATE_LIMIT, nextAllowedTime);
 			
 			//Get file
 			name=sanatiseQuery(name);
@@ -67,12 +51,11 @@ public class MusicBrainzInterface implements InternetInterface{
 			
 			if (topArtist!=null){
 				String id = topArtist.getAttribute("id");
-				int certainty = Integer.parseInt(topArtist.getAttribute("ext:score"));
 				String fetchedName = topArtist.getElementsByTagName("name").item(0).getTextContent();
 				
 				//Create an return record of details
 				Artist entry = new Artist(name);
-				entry.setCopyOf(new MusicEntry(fetchedName, id, certainty));
+				entry.setCopyOf(new MusicEntry(fetchedName, id));
 				return entry;
 				
 			}
@@ -93,7 +76,7 @@ public class MusicBrainzInterface implements InternetInterface{
 		
 		try {
 			
-			rateLimit();
+			nextAllowedTime = rateLimit(RATE_LIMIT, nextAllowedTime);
 			
 			//Get file
 			URL query = new URL("http://www.musicbrainz.org/ws/2/release?artist="
@@ -130,14 +113,4 @@ public class MusicBrainzInterface implements InternetInterface{
 		
 	}
 	
-	private static int parseDate(String orig) throws NoDateException{
-		int date= Integer.parseInt(orig.substring(0, 4));
-		if (date==0)
-			throw new NoDateException();
-		return date;
-	}
-	
-	private static String sanatiseQuery(String orig){
-		return orig.replaceAll(" ", "%20").replaceAll("&", "and");
-	}
 }

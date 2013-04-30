@@ -11,7 +11,7 @@ import java.util.HashSet;
  */
 public class CollectionEngine {
 	
-	private static String MUSIC_DIR="/home/cramsay/Music/"; 
+	private static String MUSIC_DIR="/home/cramsay/Music"; 
 	
 	private ArrayList<Artist>artists;
 	private HashSet<String>artistNames;
@@ -46,8 +46,10 @@ public class CollectionEngine {
 		for (String name: artistNames){
 			Artist art = new Artist(name);
 			art.searchForArtistDetails();
-			if (art.isFound())
+			if (art.isFound()){
 				artists.add(art);
+			 	 //System.out.println("Found artist: "+art.getDetails());//TODO remove
+			}
 		}
 	}
 	
@@ -55,8 +57,11 @@ public class CollectionEngine {
 		for (Artist art: artists){
 			art.populateAlbums();
 			Album alb = art.getLatestAlbum();
-			if (alb!=null)
-				System.out.println(art.getLatestAlbum().getDetails());
+			if (alb!=null){
+				System.out.println(alb.getDetails());
+				//for (Album a: art.getAlbumsSince(0))
+				//	System.out.println(a.getDetails());
+			}
 		}
 	}
 }

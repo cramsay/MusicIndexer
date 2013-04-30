@@ -10,7 +10,7 @@ public class Album extends MusicEntry {
 	private Artist artist;
 	
 	public Album(String name, String id, int year, Artist artist){
-		super(name,id,100);
+		super(name,id);
 		this.year = year;
 		this.artist = artist;
 	}
