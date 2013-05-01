@@ -1,9 +1,11 @@
+import java.io.Serializable;
+
 /**
  * Serves as the basis for any entry. E.G. Albums and Artists
  * @author Craig
  *
  */
-public class MusicEntry {
+public class MusicEntry implements Serializable{
 	
 	private String name;
 	private String id;

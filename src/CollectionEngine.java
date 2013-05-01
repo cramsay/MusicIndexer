@@ -1,4 +1,10 @@
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -11,7 +17,7 @@ import java.util.HashSet;
  */
 public class CollectionEngine {
 	
-	private static String MUSIC_DIR="/home/cramsay/Music/Muse"; 
+	private static String MUSIC_DIR="/home/cramsay/Music"; 
 	
 	private ArrayList<Artist>artists;
 	private HashSet<String>artistNames;
@@ -63,5 +69,34 @@ public class CollectionEngine {
 				//	System.out.println(a.getDetails());
 			}
 		}
+	}
+	
+	public void SaveCollectionToDisk(File saveState){
+		try {
+			FileOutputStream fout = new FileOutputStream(saveState);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(artists);
+		
+		} catch (IOException e) {
+			System.out.println("Couldn't read from the save file");
+		}
+	}
+	
+	public void ReadCollectionFromDisk(File saveState){
+		
+			try {
+				ObjectInputStream ois;
+				ois = new ObjectInputStream(new FileInputStream(saveState));
+				System.out.println("Going to read object in");
+				artists = (ArrayList<Artist>) ois.readObject();
+				
+			} catch (FileNotFoundException e) {
+				System.out.println("Save state file not found");
+			} catch (IOException e) {
+				System.out.println("Couldn't read from the save file");
+			} catch (ClassNotFoundException e) {
+				System.out.println("Problem with the format of the save file");
+			}
+		
 	}
 }
