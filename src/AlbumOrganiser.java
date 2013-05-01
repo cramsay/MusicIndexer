@@ -30,6 +30,27 @@ public class AlbumOrganiser {
 	}
 	
 	public static void orderAlbumsByDate(ArrayList<Album> releases){
-		//TODO COMPLETE ME
+		boolean swapped = true;
+		while (swapped){
+			swapped=false;
+			
+			for (int i=0;i<releases.size()-1;i++){
+				Album a1 = releases.get(i);
+				Album a2 = releases.get(i+1);
+				
+				if (a1.getYear()<a2.getYear()){
+					swapped=true;
+					releases.set(i, a2);
+					releases.set(i+1, a1);//Possible loss of a1?
+				}
+				else if(a1.getYear()==a2.getYear()){
+					if (a1.getName().compareTo(a2.getName())>0){
+						swapped=true;
+						releases.set(i, a2);
+						releases.set(i+1, a1); //Same here, boss
+					}
+				}
+			}
+		}
 	}
 }

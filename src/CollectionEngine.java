@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class CollectionEngine {
 	
-	private static String MUSIC_DIR="/home/cramsay/Music"; 
+	private static String MUSIC_DIR="/home/cramsay/Music/Foo Fighters"; 
 	private static Logger log = Logger.getLogger(CollectionEngine.class.getCanonicalName());
 	
 	private ArrayList<Artist>artists;

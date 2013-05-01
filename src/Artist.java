@@ -47,6 +47,9 @@ public class Artist extends MusicEntry {
 		} catch (NoReleasesException e) {
 			log.info("Couldn't find any online releases for artist "+rawName);
 		}
+	
+		AlbumOrganiser.removeDupilateAlbums(releases);
+		//AlbumOrganiser.orderAlbumsByDate(releases);
 	}
 	
 	public Album getLatestAlbum(){
