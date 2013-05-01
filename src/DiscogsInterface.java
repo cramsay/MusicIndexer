@@ -89,7 +89,7 @@ ArrayList<Album> albums = new ArrayList<Album>();
 			NodeList nList = doc.getElementsByTagName("release");
 			
 			//Get normal web page for checking release type
-			String webpage = getWebAlbumList(artist.getName());
+			String webpage = getWebDiscogTable(artist.getName());
 			
 			int loopCount=0;
 			while(loopCount<2){
@@ -123,7 +123,7 @@ ArrayList<Album> albums = new ArrayList<Album>();
 		
 	}
 	
-	private String getWebAlbumList(String name) throws Exception{
+	private String getWebDiscogTable(String name) throws Exception{
 		
 		//Get file
 		nextAllowedTime = super.rateLimit(RATE_LIMIT, nextAllowedTime);
@@ -132,8 +132,6 @@ ArrayList<Album> albums = new ArrayList<Album>();
 		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
 		Pattern p = Pattern.compile("text/html;\\s+charset=([^\\s]+)\\s*");
 		Matcher m = p.matcher(con.getContentType());
-		/* If Content-Type doesn't match this pre-conception, choose default and 
-		 * hope for the best. */
 		String charset = m.matches() ? m.group(1) : "ISO-8859-1";
 		Reader r = new InputStreamReader(con.getInputStream(), charset);
 		StringBuilder buf = new StringBuilder();
@@ -143,16 +141,12 @@ ArrayList<Album> albums = new ArrayList<Album>();
 		    break;
 		  buf.append((char) ch);
 		}
-		return buf.toString();
-		/*		query.openConnection();
-		InputStream xmlData = query.openStream();
 		
-		//Create string from stream
-		StringBuilder sb = new StringBuilder();
-		while (xmlData.available()>0)
-				sb.append(xmlData.read());
+		String page = buf.toString();
+		int tableStart = page.indexOf("<table class=\"discography\">");
+		page = page.substring(tableStart, page.indexOf("</table>", tableStart));
+		return page;
 		
-		return sb.toString();*/
 	}
 
 }

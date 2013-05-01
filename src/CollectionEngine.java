@@ -11,7 +11,7 @@ import java.util.HashSet;
  */
 public class CollectionEngine {
 	
-	private static String MUSIC_DIR="/home/cramsay/Music"; 
+	private static String MUSIC_DIR="/home/cramsay/Music/Muse"; 
 	
 	private ArrayList<Artist>artists;
 	private HashSet<String>artistNames;
