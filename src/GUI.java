@@ -14,9 +14,14 @@ import javax.swing.RowSorter;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JTable;
+import javax.swing.event.TreeModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.JScrollPane;
 
 /**
@@ -31,15 +36,16 @@ public class GUI extends JFrame{
 	
 	private CollectionEngine engine;
 	private JTable table;
+	private JTree libTree;
 	
 	public GUI(){
 		
 		engine = new CollectionEngine();
-		//engine.populateArtistNames();
-		//engine.searchForArtistDetails();
-		//engine.populateAlbums();
-		//engine.SaveCollectionToDisk(new File("collection.ser"));
-		engine.ReadCollectionFromDisk(new File("collection.ser"));
+		engine.populateArtistNames();
+		engine.searchForArtistDetails();
+		engine.populateAlbums();
+		engine.SaveCollectionToDisk(new File("collection.ser"));
+		//engine.ReadCollectionFromDisk(new File("collection.ser"));
 		
 		//Start SWING stuff
 		try {
@@ -68,8 +74,9 @@ public class GUI extends JFrame{
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
-		JTree tree = new JTree();
-		tabbedPane.addTab("Library", null, tree, null);
+		libTree = new JTree();
+		
+		tabbedPane.addTab("Library", null, libTree, null);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		tabbedPane.addTab("Sort", null, scrollPane, null);
@@ -91,7 +98,24 @@ public class GUI extends JFrame{
 		super.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		super.setVisible(true);
 		super.pack();
+		
+		populateLibraryTree();
 		makeGUI();
+	}
+	
+	private void populateLibraryTree(){
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Music", true);
+		for (Artist art : engine.getArtists()){
+			DefaultMutableTreeNode curArt = new DefaultMutableTreeNode(art.getName());
+			for (Album alb : art.getReleases()){
+				DefaultMutableTreeNode curAlb = new DefaultMutableTreeNode(alb.getName()+ 
+													" ("+alb.getYear()+")");
+				curArt.add(curAlb);
+			}
+			root.add(curArt);
+		}
+		DefaultTreeModel model = new DefaultTreeModel(root);
+		libTree.setModel(model);
 	}
 	
 	private void makeGUI(){

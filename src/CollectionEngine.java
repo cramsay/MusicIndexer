@@ -107,4 +107,8 @@ public class CollectionEngine {
 		
 		return raw;
 	}
+	
+	public ArrayList<Artist> getArtists(){
+		return artists;
+	}
 }

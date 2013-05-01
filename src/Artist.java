@@ -91,4 +91,8 @@ public class Artist extends MusicEntry {
 		return details;
 	}
 	
+	public ArrayList<Album> getReleases(){
+		return releases;
+	}
+	
 }

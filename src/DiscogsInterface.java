@@ -121,6 +121,8 @@ ArrayList<Album> albums = new ArrayList<Album>();
 			throw new NoReleasesException();
 		}
 		
+		AlbumOrganiser.removeDupilateAlbums(albums);
+		
 		return albums;
 		
 	}

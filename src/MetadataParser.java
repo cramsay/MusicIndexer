@@ -75,7 +75,7 @@ public static String getAlbum(File src){
 			f = AudioFileIO.read(src);
 		} catch (CannotReadException | IOException | TagException
 				| ReadOnlyFileException | InvalidAudioFrameException e) {
-			System.out.println("Couldn't parse metadata from " + src.getName());
+			log.info("Couldn't parse metadata from " + src.getName());
 			throw new NullPointerException();
 		}
 		return f.getTag();
