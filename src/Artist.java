@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * Represents an Artist. Can be used to obtain relevant
@@ -12,6 +13,7 @@ public class Artist extends MusicEntry {
 	private String rawName;
 	private ArrayList<Album> releases;
 	private static InternetInterface network = new DiscogsInterface();
+	private static Logger log = Logger.getLogger(Artist.class.getCanonicalName());
 	
 	/**
 	 * Constructs a new Artist object
@@ -33,7 +35,7 @@ public class Artist extends MusicEntry {
 			return true;
 			
 		} catch (NoSuchArtistException e) {
-			System.out.println("Couldn't find an online match for artist "+rawName);
+			log.info("Couldn't find an online match for artist "+rawName);
 		}
 		
 		return false;
@@ -43,7 +45,7 @@ public class Artist extends MusicEntry {
 		try {
 			releases = network.getReleases(this);
 		} catch (NoReleasesException e) {
-			System.out.println("Couldn't find any online releases for artist "+rawName);
+			log.info("Couldn't find any online releases for artist "+rawName);
 		}
 	}
 	

@@ -4,6 +4,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +33,7 @@ public class DiscogsInterface extends InternetInterface{
 
 	private static final long RATE_LIMIT= 1000;
 	private static long nextAllowedTime =0;
+	private static Logger log = Logger.getLogger(InternetInterface.class.getCanonicalName());
 	
 	@Override
 	public Artist getArtist(String name) throws NoSuchArtistException {
@@ -112,12 +114,12 @@ ArrayList<Album> albums = new ArrayList<Album>();
 			}
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warning("Failed to parse some album data for artist: "+artist.getName());
 		}
 		
-		if (albums.size()==0)
+		if (albums.size()==0){
 			throw new NoReleasesException();
+		}
 		
 		return albums;
 		

@@ -40,8 +40,10 @@ public class CollectionEngine {
 		 else{
 			 try {
 				 String artist = MetadataParser.getArtist(src);
-				 if(artist!=null)
+				 if(artist!=null){
 					 artistNames.add(artist);
+					 System.out.println(artistNames.size());//TODO remove
+				 }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -65,8 +67,6 @@ public class CollectionEngine {
 			Album alb = art.getLatestAlbum();
 			if (alb!=null){
 				System.out.println(alb.getDetails());
-				//for (Album a: art.getAlbumsSince(0))
-				//	System.out.println(a.getDetails());
 			}
 		}
 	}

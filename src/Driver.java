@@ -10,7 +10,7 @@ public class Driver {
 	 public static void main(String[] args) {
 		 CollectionEngine col = new CollectionEngine();
 		 col.populateArtistNames();
-		 col.searchForArtistDetails();
-		 col.populateAlbums();
+		// col.searchForArtistDetails();
+		// col.populateAlbums();
 	 }
 }
