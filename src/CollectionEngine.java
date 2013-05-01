@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.logging.Logger;
 
 /**
  * Works with an entire music collection
@@ -18,6 +19,7 @@ import java.util.HashSet;
 public class CollectionEngine {
 	
 	private static String MUSIC_DIR="/home/cramsay/Music"; 
+	private static Logger log = Logger.getLogger(CollectionEngine.class.getCanonicalName());
 	
 	private ArrayList<Artist>artists;
 	private HashSet<String>artistNames;
@@ -42,7 +44,6 @@ public class CollectionEngine {
 				 String artist = MetadataParser.getArtist(src);
 				 if(artist!=null){
 					 artistNames.add(artist);
-					 System.out.println(artistNames.size());//TODO remove
 				 }
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -56,7 +57,6 @@ public class CollectionEngine {
 			art.searchForArtistDetails();
 			if (art.isFound()){
 				artists.add(art);
-			 	 //System.out.println("Found artist: "+art.getDetails());//TODO remove
 			}
 		}
 	}
@@ -64,10 +64,6 @@ public class CollectionEngine {
 	public void populateAlbums(){
 		for (Artist art: artists){
 			art.populateAlbums();
-			Album alb = art.getLatestAlbum();
-			if (alb!=null){
-				System.out.println(alb.getDetails());
-			}
 		}
 	}
 	
@@ -76,9 +72,10 @@ public class CollectionEngine {
 			FileOutputStream fout = new FileOutputStream(saveState);
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
 			oos.writeObject(artists);
-		
+			oos.flush();
+			oos.close();
 		} catch (IOException e) {
-			System.out.println("Couldn't read from the save file");
+			log.warning("Couldn't write to the save state file");
 		}
 	}
 	
@@ -87,16 +84,27 @@ public class CollectionEngine {
 			try {
 				ObjectInputStream ois;
 				ois = new ObjectInputStream(new FileInputStream(saveState));
-				System.out.println("Going to read object in");
 				artists = (ArrayList<Artist>) ois.readObject();
-				
+				ois.close();
 			} catch (FileNotFoundException e) {
-				System.out.println("Save state file not found");
+				log.warning("Save state file not found");
 			} catch (IOException e) {
-				System.out.println("Couldn't read from the save file");
+				log.warning("Couldn't read from the save file");
 			} catch (ClassNotFoundException e) {
-				System.out.println("Problem with the format of the save file");
+				log.warning("Problem with the format of the save file");
 			}
+	}
+	
+	public String[][] getAlbumDetailsArray(){	
+		ArrayList<String[]> details = new ArrayList<String[]>();
+		for (Artist art: artists)
+			details.addAll(art.getAlbumDetailsArray());
+
+		final String[][] raw = new String[details.size()][];
+		int i = 0;
+		for (String[] line : details) 
+		  raw[i++] = line;
 		
+		return raw;
 	}
 }

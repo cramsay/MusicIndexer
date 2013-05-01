@@ -52,7 +52,7 @@ public class MusicEntry implements Serializable{
 		this.id = id;
 	}
 	
-	public String getDetails(){
+	public String toString(){
 		return "Name: "+name+", ID: "+id;
 	}
 }
