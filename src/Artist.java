@@ -49,7 +49,7 @@ public class Artist extends MusicEntry {
 		}
 	
 		AlbumOrganiser.removeDupilateAlbums(releases);
-		//AlbumOrganiser.orderAlbumsByDate(releases);
+		AlbumOrganiser.orderAlbumsByDate(releases);
 	}
 	
 	public Album getLatestAlbum(){

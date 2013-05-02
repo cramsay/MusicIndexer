@@ -18,25 +18,24 @@ import java.util.logging.Logger;
  */
 public class CollectionEngine {
 	
-	private static String MUSIC_DIR="/home/cramsay/Music/Foo Fighters"; 
 	private static Logger log = Logger.getLogger(CollectionEngine.class.getCanonicalName());
 	
 	private ArrayList<Artist>artists;
 	private HashSet<String>artistNames;
 	
 	public CollectionEngine(){
+		clearCollection();
+	}
+	
+	public void clearCollection(){
 		artists = new ArrayList<Artist>();
 		artistNames = new HashSet<String>();
 	}
 	
-	public void populateArtistNames(){
-		populateArtistNames(new File(MUSIC_DIR));
-	}
-	
-	private void populateArtistNames(File src){
+	public void scanFileCollection(File src){
 		if (src.isDirectory()){
 			 for (File child: src.listFiles())
-				 populateArtistNames(child);
+				 scanFileCollection(child);
 		 }
 		 
 		 else{
@@ -51,7 +50,7 @@ public class CollectionEngine {
 		 }
 	}
 	
-	public void searchForArtistDetails(){
+	public void populateArtists(){
 		for (String name: artistNames){
 			Artist art = new Artist(name);
 			art.searchForArtistDetails();
