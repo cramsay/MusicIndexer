@@ -165,6 +165,16 @@ public class GUI extends JFrame{
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
+		panel_1 = new JPanel();
+		tabbedPane.addTab("Welcome", null, panel_1, null);
+		
+		txtpnToGetStarted = new JTextPane();
+		txtpnToGetStarted.setContentType("text/html");
+		txtpnToGetStarted.setEditable(false);
+		txtpnToGetStarted.setText("<p style=\"text-align: center;\"><code><span style=\"font-family:verdana,geneva,sans-serif;\"><span style=\"font-size: 16px;\"><u><strong>Welcome Y&#39;all</strong></u></span></span></code></p>\n<p>To get started, you have 2 options:</p>\n<ol>\n<li>&quot;Scan Music&quot; to scan your music folder</li>\n<li>&quot;Load State&quot; if you have a previously stored collection</li>\n</ol>\n<p>The &quot;Library&quot; tab gives you a view of all artists who have been detected <br/>and all of thier albums we can find online.</p>\n<p>The &quot;Sort&quot; tab gives you a table with all the information which can be sorted <br/>and filtered to find the newest albums by the artists you think don&#39;t suck.</p>\n");
+		txtpnToGetStarted.setBackground(UIManager.getColor("Panel.background"));
+		panel_1.add(txtpnToGetStarted);
+		
 		libTree = new JTree();
 		libTree.setAutoscrolls(true);
 		
@@ -184,16 +194,6 @@ public class GUI extends JFrame{
 		albumTable.setRowSorter(sorter);
 		
 		scrollPane.setViewportView(albumTable);
-		
-		panel_1 = new JPanel();
-		tabbedPane.addTab("Welcome", null, panel_1, null);
-		
-		txtpnToGetStarted = new JTextPane();
-		txtpnToGetStarted.setContentType("text/html");
-		txtpnToGetStarted.setEditable(false);
-		txtpnToGetStarted.setText("<p style=\"text-align: center;\"><code><span style=\"font-family:verdana,geneva,sans-serif;\"><span style=\"font-size: 16px;\"><u><strong>Welcome Y&#39;all</strong></u></span></span></code></p>\n<p>To get started, you have 2 options:</p>\n<ol>\n<li>&quot;Scan Music&quot; to scan your music folder</li>\n<li>&quot;Load State&quot; if you have a previously stored collection</li>\n</ol>\n<p>The &quot;Library&quot; tab gives you a view of all artists who have been detected and all of thier albums we can find online.</p>\n<p>The &quot;Sort&quot; tab gives you a table with all the information which can be sorted and filtered to find the newest albums by the artists you think don&#39;t suck.</p>\n");
-		txtpnToGetStarted.setBackground(UIManager.getColor("Panel.background"));
-		panel_1.add(txtpnToGetStarted);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
