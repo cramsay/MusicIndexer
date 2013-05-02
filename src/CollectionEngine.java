@@ -75,30 +75,46 @@ public class CollectionEngine implements Runnable{
 		 
 		 else{
 			 try {
+				 //Deal with artist tag
 				 String artist = MetadataParser.getArtist(src);
 				 if(artist!=null){
 					 int origSize=artistNames.size();
 					 artistNames.add(artist);
-					 if(artistNames.size()>origSize)
+					 //If new artist
+					 if(artistNames.size()>origSize){
+						 artists.add(new Artist(artist));
 						 progress.addInfo("Found artist: "+artist);
+					 }
+					 
+					 //Add album name to artist
+					 String albumName = MetadataParser.getAlbum(src);
+					 if (albumName!=null){
+						 for (Artist a : artists){
+							 if (a.getMetadataName().equals(artist)){
+								 boolean newalb = a.addOwnedAlbumName(albumName);
+								 if (newalb)
+									 progress.addInfo("Found album: "+albumName);
+							 }
+						 }
+					 }
 				 }
 			} catch (Exception e) {
-				progress.addWarning("Couldn't parse artist for file: "+src.getName());
+				progress.addWarning("Couldn't parse metadata for file: "+src.getName());
 			}
 		 }
 	}
 	
 	public void populateArtists(){
 		int i=0;
-		for (String name: artistNames){
-			Artist art = new Artist(name);
-			art.searchForArtistDetails();
-			if (art.isFound()){
-				artists.add(art);
-				progress.addInfo("Got online match for artist: "+art.getName());
-			}
+		for (int index=0;index<artists.size();index++){
+			Artist a = artists.get(index);
+			a.searchForArtistDetails();
+			if (a.isFound())
+				progress.addInfo("Got online match for artist: "+a.getName());
 			else {
-				progress.addWarning("No online match for artist: "+name);
+				artists.remove(a);
+				index--;
+				progress.addWarning("No online match for artist: "+a.getMetadataName());
 			}
 			progress.setCurrentProgress(i++);
 		}

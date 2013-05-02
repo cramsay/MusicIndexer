@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Static utility class for sorting lists of albums
@@ -49,6 +50,19 @@ public class AlbumOrganiser {
 						releases.set(i, a2);
 						releases.set(i+1, a1); //Same here, boss
 					}
+				}
+			}
+		}
+	}
+	
+	public static void setOwnedState(ArrayList<Album> releases,HashSet<String> ownedNames){
+		//For each owned album
+		for (String albumName: ownedNames){
+			//Find in releases and set owned to true
+			for (Album alb: releases){
+				if (alb.getName().trim().toLowerCase().equals(albumName.trim().toLowerCase())){
+					alb.setOwned(true);
+					break;
 				}
 			}
 		}

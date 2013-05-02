@@ -145,7 +145,7 @@ public class MusicScanGUI extends JFrame implements ProgressListener{
 	}
 	
 	private void cancel(){
-		int res = JOptionPane.showConfirmDialog(null,"Cancel Scan", "Do you really want to cancel?",JOptionPane.YES_NO_OPTION);
+		int res = JOptionPane.showConfirmDialog(null,"Do you really want to cancel?","Cancel Scan",JOptionPane.YES_NO_OPTION);
 		if (res==JOptionPane.NO_OPTION)
 			return;
 		scanner.stop();

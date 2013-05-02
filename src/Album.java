@@ -16,6 +16,7 @@ public class Album extends MusicEntry {
 		super(name,id);
 		this.year = year;
 		this.artist = artist;
+		this.owned = false;
 	}
 	
 	public int getYear(){
@@ -27,6 +28,14 @@ public class Album extends MusicEntry {
 	}
 	
 	public String[] getDetailsArray(){
-		return new String[]{artist.getName(), super.getName(), Integer.toString(year),"No"};
+		return new String[]{artist.getName(), super.getName(), Integer.toString(year),Boolean.toString(owned)};
+	}
+	
+	public void setOwned(boolean o){
+		owned=o;
+	}
+	
+	public boolean getOwned(){
+		return owned;
 	}
 }

@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.logging.Logger;
 
 /**
@@ -12,6 +13,7 @@ public class Artist extends MusicEntry {
 
 	private String rawName;
 	private ArrayList<Album> releases;
+	private HashSet<String> ownedAlbumNames;
 	private static InternetInterface network = new DiscogsInterface();
 	private static Logger log = Logger.getLogger(Artist.class.getCanonicalName());
 	
@@ -22,6 +24,7 @@ public class Artist extends MusicEntry {
 	public Artist(String name){
 		rawName=name;
 		releases = new ArrayList<Album>();
+		ownedAlbumNames = new HashSet<String>();
 	}
 	
 	public boolean searchForArtistDetails(){
@@ -47,36 +50,9 @@ public class Artist extends MusicEntry {
 		} catch (NoReleasesException e) {
 			log.info("Couldn't find any online releases for artist "+rawName);
 		}
-	
 		AlbumOrganiser.removeDupilateAlbums(releases);
 		AlbumOrganiser.orderAlbumsByDate(releases);
-	}
-	
-	public Album getLatestAlbum(){
-		//Find max date
-		if (releases.size()==0)
-			return null;
-
-		int maxI=0;
-		for (int i=1;i<releases.size();i++){
-			if (releases.get(i).getYear()>releases.get(maxI).getYear())
-				maxI=i;
-		}
-		
-		//Return corresponding release
-		return releases.get(maxI);
-		
-	}
-	
-	public ArrayList<Album> getAlbumsSince(int year){
-		ArrayList<Album> result = new ArrayList<Album>();
-		
-		for (Album alb : releases){
-			if (alb.getYear()>=year)
-				result.add(alb);
-		}
-		
-		return result;
+		AlbumOrganiser.setOwnedState(releases,ownedAlbumNames);
 	}
 	
 	public boolean isFound(){
@@ -96,6 +72,14 @@ public class Artist extends MusicEntry {
 	
 	public ArrayList<Album> getReleases(){
 		return releases;
+	}
+	
+	public boolean addOwnedAlbumName(String name){
+		return ownedAlbumNames.add(name);
+	}
+	
+	public String getMetadataName(){
+		return rawName;
 	}
 	
 }
