@@ -1,9 +1,12 @@
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,6 +37,11 @@ public class DiscogsInterface extends InternetInterface{
 	private static final long RATE_LIMIT= 1000;
 	private static long nextAllowedTime =0;
 	private static Logger log = Logger.getLogger(InternetInterface.class.getCanonicalName());
+	private HashMap<String, ArrayList<Album>> dataMap;
+	
+	public DiscogsInterface(){
+		dataMap=new HashMap<>();
+	}
 	
 	@Override
 	public Artist getArtist(String name) throws NoSuchArtistException {
@@ -43,7 +51,7 @@ public class DiscogsInterface extends InternetInterface{
 			
 			//Get file
 			name=sanatiseQuery(name);
-			URL query = new URL("http://api.discogs.com/artist/"+name+"?f=xml");
+			URL query = new URL("http://api.discogs.com/artist/"+name+"?releases=1&f=xml");
 			query.openConnection();
 			InputStream xmlData = query.openStream();
 			
@@ -60,6 +68,7 @@ public class DiscogsInterface extends InternetInterface{
 				//Create an return record of details
 				Artist entry = new Artist(name);
 				entry.setCopyOf(new MusicEntry(fetchedName, id));
+				dataMap.put(id, getReleases(entry, doc)); //Store copy of doc for when looking for artist
 				return entry;
 				
 			}
@@ -71,22 +80,17 @@ public class DiscogsInterface extends InternetInterface{
 		return null;
 	}
 
-	@Override
-	public ArrayList<Album> getReleases(Artist artist)
+	public ArrayList<Album> getReleases(Artist artist){
+		return dataMap.get(artist.getID());
+	}
+	
+	public ArrayList<Album> getReleases(Artist artist, Document doc)
 			throws NoReleasesException {
-ArrayList<Album> albums = new ArrayList<Album>();
+		ArrayList<Album> albums = new ArrayList<Album>();
 		
 		try {
 			
-			nextAllowedTime = rateLimit(RATE_LIMIT, nextAllowedTime);
-			
-			//Get file
-			URL query = new URL("http://api.discogs.com/artist/"+sanatiseQuery(artist.getName())+"?releases=1&f=xml");
-			query.openConnection();
-			InputStream xmlData = query.openStream();
-			
-			//Parse XML fields
-			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlData);
+			//nextAllowedTime = rateLimit(RATE_LIMIT, nextAllowedTime);
 			doc.getDocumentElement().normalize();
 			NodeList nList = doc.getElementsByTagName("release");
 			
@@ -128,7 +132,6 @@ ArrayList<Album> albums = new ArrayList<Album>();
 	private String getWebDiscogTable(String name) throws Exception{
 		
 		//Get file
-		nextAllowedTime = super.rateLimit(RATE_LIMIT, nextAllowedTime);
 		URL query = new URL("http://www.discogs.com/artist/"+sanatiseQuery(name)+"/-Releases/-Albums");
 		URLConnection con = query.openConnection();
 		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");

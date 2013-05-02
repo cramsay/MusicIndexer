@@ -150,7 +150,8 @@ public class MusicScanGUI extends JFrame implements ProgressListener{
 			return;
 		scanner.stop();
 		engine.clearCollection();
-		done();
+		parent.refreshGUI();
+		close();
 	}
 	
 	private void close(){
@@ -214,12 +215,14 @@ public class MusicScanGUI extends JFrame implements ProgressListener{
         
         JPanel jp = new JPanel();
         btnClose = new JButton("Close");
+        btnClose.setMnemonic('C');
         btnClose.setEnabled(false);
         btnClose.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
 				close();
 			}});
         btnCancel = new JButton("Cancel");
+        btnCancel.setMnemonic('l');
         btnCancel.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
 				cancel();

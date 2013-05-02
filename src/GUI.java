@@ -88,6 +88,7 @@ public class GUI extends JFrame{
 			@Override  
 		    public Class getColumnClass(int col) {
 				if (col==3) return Boolean.class;  
+				else if (col==2) return Integer.class;
 		        else return String.class;
 			}  
 			@Override
@@ -165,18 +166,21 @@ public class GUI extends JFrame{
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		btnScanMusic = new JButton("Scan Music");
+		btnScanMusic.setMnemonic('M');
 		panel.add(btnScanMusic);
 		btnScanMusic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				scanMusic();	}});
 		
 		btnLoadState = new JButton("Load State");
+		btnLoadState.setMnemonic('L');
 		panel.add(btnLoadState);
 		btnLoadState.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				loadState();	}});
 		
 		btnSaveState = new JButton("Save State");
+		btnSaveState.setMnemonic('S');
 		panel.add(btnSaveState);
 		btnSaveState.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
