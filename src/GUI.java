@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.logging.Logger;
 
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
@@ -78,12 +79,33 @@ public class GUI extends JFrame{
 	
 	private void populateAlbumTable(){
 		
-		TableModel model = new DefaultTableModel(engine.getAlbumDetailsArray(),
+		//Just adapted default table model to have a check box
+		//in the 3rd column
+		class AlbumTableModel extends DefaultTableModel{
+			public AlbumTableModel (Object[][] d, Object[] c){
+				super(d,c);
+			}
+			@Override  
+		    public Class getColumnClass(int col) {
+				if (col==3) return Boolean.class;  
+		        else return String.class;
+			}  
+			@Override
+			public boolean isCellEditable(int row,int col) {
+				return false;
+			}
+			
+		}
+		
+		Object[][] tableData = engine.getAlbumDetailsArray();
+		AlbumTableModel model = new AlbumTableModel(tableData,
 				new String[] {"Artist", "Album", "Year", "Owned?"	}
 			);
+		
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
 		albumTable.setModel(model);
 		albumTable.setRowSorter(sorter);
+		albumTable.getColumnClass(3);
 	}
 	
 	private void loadState(){

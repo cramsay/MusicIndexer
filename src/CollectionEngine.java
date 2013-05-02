@@ -162,14 +162,14 @@ public class CollectionEngine implements Runnable{
 			}
 	}
 	
-	public String[][] getAlbumDetailsArray(){	
-		ArrayList<String[]> details = new ArrayList<String[]>();
+	public Object[][] getAlbumDetailsArray(){	
+		ArrayList<Object[]> details = new ArrayList<Object[]>();
 		for (Artist art: artists)
 			details.addAll(art.getAlbumDetailsArray());
 
-		final String[][] raw = new String[details.size()][];
+		final Object[][] raw = new Object[details.size()][];
 		int i = 0;
-		for (String[] line : details) 
+		for (Object[] line : details) 
 		  raw[i++] = line;
 		
 		return raw;

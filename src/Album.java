@@ -27,8 +27,8 @@ public class Album extends MusicEntry {
 		return "Title: "+super.getName()+ ", ID: "+super.getID()+", Artist: "+artist.getName()+", Year:"+year;
 	}
 	
-	public String[] getDetailsArray(){
-		return new String[]{artist.getName(), super.getName(), Integer.toString(year),Boolean.toString(owned)};
+	public Object[] getDetailsArray(){
+		return new Object[]{artist.getName(), super.getName(), year,owned};
 	}
 	
 	public void setOwned(boolean o){

@@ -62,9 +62,9 @@ public class Artist extends MusicEntry {
 			return true;
 	}
 	
-	public ArrayList<String[]> getAlbumDetailsArray(){
+	public ArrayList<Object[]> getAlbumDetailsArray(){
 		
-		ArrayList<String[]> details = new ArrayList<String[]>();
+		ArrayList<Object[]> details = new ArrayList<Object[]>();
 		for (Album alb: releases)
 			details.add(alb.getDetailsArray());
 		return details;
