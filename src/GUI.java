@@ -21,6 +21,7 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 
 /**
  * GUI is the graphical interface between the user and
@@ -32,7 +33,7 @@ public class GUI extends JFrame{
 	
 	private static Logger log = Logger.getLogger(GUI.class.getCanonicalName());
 	private static JFileChooser musicChooser = new JFileChooser();
-	private static JFileChooser stateChooser = new JFileChooser();
+	private static JFileChooser stateChooser = new JFileChooser(System.getenv("APPDATA"));
 	
 	private CollectionEngine engine;
 	
@@ -41,6 +42,8 @@ public class GUI extends JFrame{
 	private JButton btnScanMusic;
 	private JButton btnSaveState;
 	private JButton btnLoadState;
+	private JPanel panel_1;
+	private JTextPane txtpnToGetStarted;
 	
 	public GUI(){
 		
@@ -163,10 +166,13 @@ public class GUI extends JFrame{
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		libTree = new JTree();
-		
-		tabbedPane.addTab("Library", null, libTree, null);
+		libTree.setAutoscrolls(true);
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(libTree);
+		tabbedPane.addTab("Library", null, scrollPane, null);
+		
+		scrollPane = new JScrollPane();
 		tabbedPane.addTab("Sort", null, scrollPane, null);
 		
 		TableModel model = new DefaultTableModel(engine.getAlbumDetailsArray(),
@@ -179,11 +185,23 @@ public class GUI extends JFrame{
 		
 		scrollPane.setViewportView(albumTable);
 		
+		panel_1 = new JPanel();
+		tabbedPane.addTab("Welcome", null, panel_1, null);
+		
+		txtpnToGetStarted = new JTextPane();
+		txtpnToGetStarted.setContentType("text/html");
+		txtpnToGetStarted.setEditable(false);
+		txtpnToGetStarted.setText("<p style=\"text-align: center;\"><code><span style=\"font-family:verdana,geneva,sans-serif;\"><span style=\"font-size: 16px;\"><u><strong>Welcome Y&#39;all</strong></u></span></span></code></p>\n<p>To get started, you have 2 options:</p>\n<ol>\n<li>&quot;Scan Music&quot; to scan your music folder</li>\n<li>&quot;Load State&quot; if you have a previously stored collection</li>\n</ol>\n<p>The &quot;Library&quot; tab gives you a view of all artists who have been detected and all of thier albums we can find online.</p>\n<p>The &quot;Sort&quot; tab gives you a table with all the information which can be sorted and filtered to find the newest albums by the artists you think don&#39;t suck.</p>\n");
+		txtpnToGetStarted.setBackground(UIManager.getColor("Panel.background"));
+		panel_1.add(txtpnToGetStarted);
+		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
 		super.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		super.setVisible(true);
 		super.pack();
+		super.setLocationRelativeTo(null);
+		
 	}
 }
