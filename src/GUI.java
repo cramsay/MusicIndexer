@@ -117,14 +117,12 @@ public class GUI extends JFrame{
 			log.info("User dismissed file chooser");
 			return;
 		}
-		engine.clearCollection();
-		engine.scanFileCollection(musicChooser.getSelectedFile());
-		engine.populateArtists();
-		engine.populateAlbums();
+		MusicScanGUI scan = new MusicScanGUI(this, engine, musicChooser.getSelectedFile());
+		scan.startScan();
 		refreshGUI();
 	}
 	
-	private void refreshGUI(){
+	public void refreshGUI(){
 		populateLibraryTree();
 		populateAlbumTable();
 	}
