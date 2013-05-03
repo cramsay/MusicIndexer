@@ -13,6 +13,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.JMenuBar;
+import javax.swing.RowFilter;
 import javax.swing.UIManager;
 import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -37,8 +38,8 @@ public class GUI extends JFrame{
 	private static JFileChooser stateChooser = new JFileChooser(System.getenv("APPDATA"));
 	
 	private CollectionEngine engine;
+	private AlbumTable albumTable;
 	
-	private JTable albumTable;
 	private JTree libTree;
 	private JButton btnScanMusic;
 	private JButton btnSaveState;
@@ -78,37 +79,9 @@ public class GUI extends JFrame{
 	}
 	
 	private void populateAlbumTable(){
-		
-		//Just adapted default table model to have a check box
-		//in the 3rd column
-		class AlbumTableModel extends DefaultTableModel{
-			public AlbumTableModel (Object[][] d, Object[] c){
-				super(d,c);
-			}
-			@Override  
-		    public Class getColumnClass(int col) {
-				if (col==3) return Boolean.class;  
-				else if (col==2) return Integer.class;
-		        else return String.class;
-			}  
-			@Override
-			public boolean isCellEditable(int row,int col) {
-				return false;
-			}
-			
-		}
-		
-		Object[][] tableData = engine.getAlbumDetailsArray();
-		AlbumTableModel model = new AlbumTableModel(tableData,
-				new String[] {"Artist", "Album", "Year", "Owned?"	}
-			);
-		
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-		albumTable.setModel(model);
-		albumTable.setRowSorter(sorter);
-		albumTable.getColumnClass(3);
+		albumTable.populate();
 	}
-	
+
 	private void loadState(){
 		int res = stateChooser.showOpenDialog(this);
 
@@ -140,6 +113,7 @@ public class GUI extends JFrame{
 			log.info("User dismissed file chooser");
 			return;
 		}
+		engine.clearCollection();
 		MusicScanGUI scan = new MusicScanGUI(this, engine, musicChooser.getSelectedFile());
 		scan.startScan();
 		refreshGUI();
@@ -208,15 +182,8 @@ public class GUI extends JFrame{
 		
 		scrollPane = new JScrollPane();
 		tabbedPane.addTab("Sort", null, scrollPane, null);
-		
-		TableModel model = new DefaultTableModel(engine.getAlbumDetailsArray(),
-				new String[] {"Artist", "Album", "Year", "Owned?"	}
-			);
-		albumTable = new JTable();
-		
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-		albumTable.setRowSorter(sorter);
-		
+	
+		albumTable = new AlbumTable(engine);
 		scrollPane.setViewportView(albumTable);
 		
 		JMenuBar menuBar = new JMenuBar();

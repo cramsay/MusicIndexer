@@ -46,22 +46,22 @@ public class CollectionEngine implements Runnable{
 	}
 	
 	public void populateCollection(){
-		progress.setOverallMax(3);
+		progress.setOverallMax(2);
 		progress.setOverallProgress(0);
 		progress.setTaskName("Looking at metadata from "+root.getPath());
 		scanFileCollection(root);
 		
 		progress.setOverallProgress(1);
 		progress.setCurrentMax(artistNames.size());
-		progress.setTaskName("Looking for artist information online");
+		progress.setTaskName("Looking for artist/album information online");
 		populateArtists();
 		
 		progress.setOverallProgress(2);
 		progress.setCurrentMax(artists.size());
-		progress.setTaskName("Looking for album information online");
+		progress.setTaskName("Storing album data");
 		populateAlbums();
 		
-		progress.setOverallProgress(3);
+//		progress.setOverallProgress(3);
 		progress.setTaskName("Finished :)");
 
 		progress.done();		
@@ -126,8 +126,8 @@ public class CollectionEngine implements Runnable{
 			art.populateAlbums();
 			progress.setCurrentProgress(i++);
 			if (art.getReleases().size()>0){
-				for (Album alb: art.getReleases())
-					progress.addInfo("Found album: "+alb.getName());
+				//for (Album alb: art.getReleases())
+					//progress.addInfo("Found album: "+alb.getName());
 			}
 			else
 				progress.addWarning("No releases found for artist: "+art.getName());
