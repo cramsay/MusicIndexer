@@ -74,6 +74,12 @@ public class Artist extends MusicEntry {
 		return releases;
 	}
 	
+	public ArrayList<String> getOwnedReleases(){
+		ArrayList<String> albs = new ArrayList<String>();
+		albs.addAll(ownedAlbumNames);
+		return albs;
+	}
+	
 	public boolean addOwnedAlbumName(String name){
 		return ownedAlbumNames.add(name);
 	}

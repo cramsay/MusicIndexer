@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Label;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -30,10 +31,12 @@ public class AlbumTable extends JPanel{
 	private JComboBox<String> cmbOwn;
 	private JButton btnApply;
 	private JButton btnClear;
-
+	private ArrayList<RowFilter<Object, Object>> filters;
+	
 	public AlbumTable(CollectionEngine engine){
 	
 		this.engine = engine;
+		filters = new ArrayList<>();
 		makeGUI();
 	}
 	
@@ -69,7 +72,7 @@ public class AlbumTable extends JPanel{
 
 	private void applyAllFilters(){
 		
-		ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>() ;
+		int nFilters=filters.size();
 		
 		//Apply Artist
 		String art = txtArt.getText();
@@ -118,7 +121,7 @@ public class AlbumTable extends JPanel{
 		}
 		
 		//Set status
-		if (filters.size()>0){
+		if (filters.size()>nFilters){
 			tableSorter.setRowFilter(RowFilter.andFilter(filters));
 			lblStatus.setText("Status: Filter Applied");
 		}
@@ -129,6 +132,7 @@ public class AlbumTable extends JPanel{
 	
 	public void clearFilters(){
 		lblStatus.setText("Status: No Filters");
+		filters = new ArrayList<>();
 		populate();
 		clearFilterComponents();
 	}
@@ -255,7 +259,7 @@ public class AlbumTable extends JPanel{
 		
 		cmbOwn = new JComboBox();
 		cmbOwn.setFont(new Font("Dialog", Font.PLAIN, 10));
-		cmbOwn.setModel(new DefaultComboBoxModel(new String[] {"All", "Only Owned", "Only Not Owned"}));
+		cmbOwn.setModel(new DefaultComboBoxModel(new String[] {"No Change", "Only Owned", "Only Not Owned"}));
 		GridBagConstraints gbc_cmbOwn = new GridBagConstraints();
 		gbc_cmbOwn.anchor = GridBagConstraints.NORTH;
 		gbc_cmbOwn.gridwidth = 4;
@@ -282,6 +286,7 @@ public class AlbumTable extends JPanel{
 				
 			}
 		});
+		btnApply.setMnemonic('A');
 		btnApply.setFont(new Font("Dialog", Font.BOLD, 10));
 		GridBagConstraints gbc_btnApplyFilter = new GridBagConstraints();
 		gbc_btnApplyFilter.fill = GridBagConstraints.VERTICAL;
@@ -291,6 +296,7 @@ public class AlbumTable extends JPanel{
 		super.add(btnApply, gbc_btnApplyFilter);
 		
 		btnClear = new JButton("Clear");
+		btnClear.setMnemonic('C');
 		btnClear.addActionListener(new ActionListener() {
 			
 			@Override

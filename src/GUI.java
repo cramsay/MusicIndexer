@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.JMenuBar;
@@ -42,6 +43,7 @@ public class GUI extends JFrame{
 	private AlbumTable albumTable;
 	
 	private JTree libTree;
+	private JTree libOwnedTree;
 	private JButton btnScanMusic;
 	private JButton btnSaveState;
 	private JButton btnLoadState;
@@ -59,13 +61,12 @@ public class GUI extends JFrame{
 		
 		//Start SWING stuff
 		makeGUI();
-		populateLibraryTree();
-		populateAlbumTable();
+		refreshGUI();
 		
 	}
 	
-	private void populateLibraryTree(){
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Music", true);
+	private void populateLibraryTrees(){
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Online Music", true);
 		for (Artist art : engine.getArtists()){
 			DefaultMutableTreeNode curArt = new DefaultMutableTreeNode(art.getName());
 			for (Album alb : art.getReleases()){
@@ -77,6 +78,19 @@ public class GUI extends JFrame{
 		}
 		DefaultTreeModel model = new DefaultTreeModel(root);
 		libTree.setModel(model);
+	
+		root = new DefaultMutableTreeNode("Owned Music", true);
+		for (Artist art : engine.getArtists()){
+			DefaultMutableTreeNode curArt = new DefaultMutableTreeNode(art.getMetadataName());
+			for (String alb : art.getOwnedReleases()){
+				DefaultMutableTreeNode curAlb = new DefaultMutableTreeNode(alb);
+				curArt.add(curAlb);
+			}
+			root.add(curArt);
+		}
+		model = new DefaultTreeModel(root);
+		libOwnedTree.setModel(model);
+	
 	}
 	
 	private void populateAlbumTable(){
@@ -121,7 +135,7 @@ public class GUI extends JFrame{
 	}
 	
 	public void refreshGUI(){
-		populateLibraryTree();
+		populateLibraryTrees();
 		populateAlbumTable();
 	}
 	
@@ -176,10 +190,18 @@ public class GUI extends JFrame{
 		
 		libTree = new JTree();
 		libTree.setAutoscrolls(true);
+		libOwnedTree = new JTree();
+		libOwnedTree.setAutoscrolls(true);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(libTree);
-		tabbedPane.addTab("Library", null, scrollPane, null);
+		JSplitPane jsplit = new JSplitPane();
+		jsplit.setRightComponent(scrollPane);
+		scrollPane = new JScrollPane();
+		scrollPane.setViewportView(libOwnedTree);
+		jsplit.setLeftComponent(scrollPane);
+		jsplit.setDividerLocation(330);
+		tabbedPane.addTab("Library", null, jsplit, null);
 		
 		albumTable = new AlbumTable(engine);
 		tabbedPane.addTab("Sort", null, albumTable , null);
