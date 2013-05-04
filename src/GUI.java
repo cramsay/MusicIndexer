@@ -24,6 +24,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import java.awt.Button;
 
 /**
  * GUI is the graphical interface between the user and
@@ -180,11 +181,8 @@ public class GUI extends JFrame{
 		scrollPane.setViewportView(libTree);
 		tabbedPane.addTab("Library", null, scrollPane, null);
 		
-		scrollPane = new JScrollPane();
-		tabbedPane.addTab("Sort", null, scrollPane, null);
-	
 		albumTable = new AlbumTable(engine);
-		scrollPane.setViewportView(albumTable);
+		tabbedPane.addTab("Sort", null, albumTable , null);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
